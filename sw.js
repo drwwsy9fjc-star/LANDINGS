@@ -1,4 +1,4 @@
-const CACHE = 'mashtan-v1';
+const CACHE = 'mashtan-v1'; 
 const FILES = [
   './',
   './index.html',
