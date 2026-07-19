@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="מנחתים">
@@ -28,9 +28,9 @@ body{
   padding:10px 16px;
   display:flex;justify-content:space-between;align-items:center;
   z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.4);
-  flex-wrap:wrap;gap:8px;
+  gap:8px;
 }
-.tbg{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.tbg{display:flex;align-items:center;gap:8px;}
 
 #toolbar select{
   padding:9px 28px 9px 10px;font-size:16px;border-radius:6px;
@@ -42,45 +42,59 @@ body{
   background-repeat:no-repeat;background-position:left 9px center;
 }
 
-.btn{
-  color:white;border:1px solid #718096;border-radius:6px;
-  padding:8px 14px;font-size:15px;font-weight:500;cursor:pointer;
-  font-family:'Heebo',sans-serif;-webkit-appearance:none;appearance:none;
-  white-space:nowrap;user-select:none;-webkit-user-select:none;
-  transition:opacity .15s,transform .1s;background:#4a5568;
+/* ── THREE-DOTS MENU BUTTON ── */
+#menu-btn{
+  background:#2d3748;border:1px solid #4a5568;border-radius:6px;
+  color:white;font-size:20px;padding:6px 12px;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  user-select:none;-webkit-user-select:none;
+  line-height:1;
 }
-.btn:active{transform:scale(.95);opacity:.85;}
-.btn-edit  {background:#4a5568;}
-.btn-save  {background:#2b6cb0;border-color:#2b6cb0;}
-.btn-pdf   {background:#dd6b20;border-color:#dd6b20;}
-.btn-del   {background:#e53e3e;border-color:#c53030;}
-.btn-move  {background:#6b46c1;border-color:#553c9a;}
-.btn-import{background:#4a5568;cursor:pointer;display:flex;align-items:center;gap:5px;}
-.is-editing .btn-edit{background:#38a169;border-color:#2f855a;}
+#menu-btn:active{opacity:.75;}
 
-@media(max-width:820px){
-  #toolbar{padding:8px 10px;justify-content:center;}
-  .tbg{justify-content:center;gap:6px;}
-  .btn{padding:7px 11px;font-size:14px;}
+/* ── DROPDOWN MENU ── */
+#menu-panel{
+  display:none;position:fixed;top:0;left:0;
+  width:100%;height:100%;z-index:3500;
 }
+#menu-panel.open{display:block;}
+#menu-backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,.4);
+}
+#menu-list{
+  position:absolute;top:58px;left:16px;
+  background:#1a202c;border:1px solid #4a5568;
+  border-radius:10px;min-width:220px;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  overflow:hidden;
+}
+.menu-item{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;font-size:16px;color:white;
+  font-family:'Heebo',sans-serif;cursor:pointer;
+  border:none;background:transparent;width:100%;text-align:right;
+  -webkit-appearance:none;
+  transition:background .15s;
+}
+.menu-item:active,.menu-item:hover{background:#2d3748;}
+.menu-item.danger{color:#fc8181;}
+.menu-item.edit-active{color:#68d391;}
+.menu-sep{height:1px;background:#2d3748;margin:4px 0;}
 
-/* ── INSTALL BANNER ── */
-#install-banner{
-  display:none;position:fixed;bottom:0;left:0;width:100%;
-  background:#2b6cb0;color:white;
-  padding:12px 18px;z-index:2000;
-  align-items:center;justify-content:space-between;
-  gap:10px;flex-wrap:wrap;
-  box-shadow:0 -4px 12px rgba(0,0,0,.3);
-  font-family:'Heebo',sans-serif;
+/* font size controls inside menu */
+.menu-font-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 18px;gap:10px;
 }
-#install-banner.show{display:flex;}
-#install-banner p{margin:0;font-size:14px;line-height:1.4;}
-#install-banner button{
-  background:white;color:#2b6cb0;border:none;border-radius:6px;
-  padding:8px 16px;font-size:14px;font-family:'Heebo',sans-serif;
-  cursor:pointer;font-weight:700;white-space:nowrap;
+.menu-font-row span{font-size:14px;color:#a0aec0;font-family:'Heebo',sans-serif;}
+.font-btns{display:flex;gap:8px;}
+.font-btn{
+  background:#2d3748;border:1px solid #4a5568;color:white;
+  border-radius:6px;padding:6px 14px;font-size:16px;
+  font-family:'Heebo',sans-serif;cursor:pointer;
+  -webkit-appearance:none;font-weight:700;
 }
+.font-btn:active{background:#4a5568;}
 
 /* ── A4 ── */
 .page-wrapper{width:100%;display:flex;justify-content:center;}
@@ -90,6 +104,7 @@ body{
   padding:14mm;box-sizing:border-box;
   display:grid;grid-template-columns:1fr 1.3fr;gap:16px;
   position:relative;line-height:1.4;overflow:hidden;flex-shrink:0;
+  transform-origin:top center;
 }
 .pg-header{
   grid-column:1/-1;display:flex;justify-content:space-between;
@@ -97,29 +112,33 @@ body{
   padding-bottom:10px;margin-bottom:6px;
 }
 .pg-title{font-size:25px;font-weight:700;color:#2c5282;width:70%;line-height:1.3;}
+
+/* [1] unit-logo: no border in read mode, dashed only in edit */
 .unit-logo{
-  width:62px;height:62px;border:2px dashed #a0aec0;border-radius:50%;
+  width:62px;height:62px;border-radius:50%;
   display:flex;justify-content:center;align-items:center;
   font-size:11px;color:#718096;background:#f7fafc;
   text-align:center;background-size:cover;background-position:center;
   overflow:hidden;position:relative;flex-shrink:0;cursor:default;
+  border:2px solid transparent;
 }
-.is-editing .unit-logo{cursor:pointer;border-color:#ed8936;}
+.is-editing .unit-logo{cursor:pointer;border:2px dashed #ed8936;}
+
 .data-col{display:flex;flex-direction:column;gap:11px;overflow:hidden;}
 .dblock{
   background:#f8fafc;border:1px solid #e2e8f0;
   border-right:5px solid #ed8936;border-radius:6px;
-  padding:9px 13px;font-size:13.5px;color:#2d3748;word-break:break-word;
+  padding:9px 13px;color:#2d3748;word-break:break-word;
 }
 .dblock.desc{min-height:76px;}
-.dblock h3{margin:0 0 4px;font-size:14.5px;color:#1a202c;line-height:1.2;}
+.dblock h3{margin:0 0 4px;color:#1a202c;line-height:1.2;}
 .split-row{display:flex;gap:11px;}
 .split-item{
   flex:1;background:#f8fafc;border:1px solid #e2e8f0;
   border-right:5px solid #ed8936;border-radius:6px;
   padding:6px 13px;word-break:break-word;
 }
-.split-item h3{margin:0 0 2px;font-size:14.5px;color:#1a202c;line-height:1.2;}
+.split-item h3{margin:0 0 2px;color:#1a202c;line-height:1.2;}
 .ltr{direction:ltr;text-align:right;display:inline-block;width:100%;}
 .editable{line-height:1.4;min-height:18px;outline:none;}
 .is-editing .editable{
@@ -129,22 +148,31 @@ body{
   background:rgba(254,252,191,.88);border-color:#b7791f;
   box-shadow:0 0 0 2px rgba(214,158,46,.2);
 }
+
 .img-col{display:flex;flex-direction:column;gap:11px;overflow:hidden;}
+/* [1] imgblock: no dashed border in read mode */
 .imgblock{
-  background:#ebf4ff;border:2px dashed #a3bffa;border-radius:8px;
+  background:#f0f4ff;border-radius:8px;
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   color:#4c51bf;font-weight:500;font-size:15px;
   background-size:cover;background-position:center;
   overflow:hidden;position:relative;cursor:default;
-  resize:none;min-height:55px;transition:border-color .2s;
+  resize:none;min-height:55px;
+  border:2px solid transparent;
+  transition:border-color .2s;
 }
 .imgblock.lrg{height:335px;}
 .imgblock.med{height:228px;}
-.is-editing .imgblock{resize:vertical;overflow:auto;cursor:pointer;}
+/* dashed border only in edit mode */
+.is-editing .imgblock{
+  resize:vertical;overflow:auto;cursor:pointer;
+  border:2px dashed #a3bffa;
+}
 .is-editing .imgblock:hover{border-color:#667eea;}
 .iico{font-size:26px;margin-bottom:6px;opacity:.6;pointer-events:none;}
 .ilbl{pointer-events:none;font-size:14px;}
 .has-img .iico,.has-img .ilbl{display:none;}
+
 .zoom-btn{
   position:absolute;bottom:7px;left:7px;
   background:rgba(255,255,255,.9);border-radius:5px;
@@ -167,17 +195,31 @@ body{
   overflow:hidden;clip:rect(0,0,0,0);border:0;opacity:0;
 }
 
-/* ── LIGHTBOX ── */
+/* ── LIGHTBOX — [4] pinch-zoom enabled ── */
 #lightbox{
   display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.88);z-index:3000;
+  background:rgba(0,0,0,.92);z-index:4000;
   justify-content:center;align-items:center;
+  overflow:auto;
+  /* allow pinch zoom inside lightbox */
+  touch-action:pinch-zoom;
 }
-#lightbox img{max-width:95%;max-height:95%;object-fit:contain;border-radius:8px;}
+#lb-inner{
+  display:flex;justify-content:center;align-items:center;
+  min-width:100%;min-height:100%;
+  touch-action:pinch-zoom;
+}
+#lb-img{
+  max-width:95vw;max-height:92vh;
+  object-fit:contain;border-radius:8px;
+  touch-action:pinch-zoom;
+  /* allow scaling by pinch */
+  transform-origin:center center;
+}
 #lb-x{
-  position:absolute;top:14px;left:14px;color:white;font-size:26px;
+  position:fixed;top:14px;left:14px;color:white;font-size:26px;
   cursor:pointer;background:rgba(255,255,255,.15);
-  width:38px;height:38px;border-radius:50%;
+  width:38px;height:38px;border-radius:50%;z-index:4001;
   display:flex;align-items:center;justify-content:center;
 }
 
@@ -199,10 +241,10 @@ body{
 .toast.err{border-right-color:#f56565;}
 .toast.inf{border-right-color:#63b3ed;}
 
-/* ── MODAL ── */
+/* ── CONFIRM MODAL ── */
 .modal-bg{
   display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.62);z-index:4000;
+  background:rgba(0,0,0,.62);z-index:4500;
   justify-content:center;align-items:center;
 }
 .modal-bg.open{display:flex;}
@@ -234,6 +276,7 @@ body{
   display:flex;flex-direction:column;
   justify-content:center;align-items:center;
   gap:20px;z-index:9000;color:white;font-size:18px;
+  text-align:center;padding:20px;
 }
 #loading.gone{display:none;}
 .spinner{
@@ -243,11 +286,29 @@ body{
 }
 @keyframes spin{to{transform:rotate(360deg);}}
 
+/* ── INSTALL BANNER ── */
+#install-banner{
+  display:none;position:fixed;bottom:0;left:0;width:100%;
+  background:#2b6cb0;color:white;
+  padding:12px 18px;z-index:2000;
+  align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+  box-shadow:0 -4px 12px rgba(0,0,0,.3);
+  font-family:'Heebo',sans-serif;
+}
+#install-banner.show{display:flex;}
+#install-banner p{margin:0;font-size:14px;line-height:1.4;}
+#install-banner button{
+  background:white;color:#2b6cb0;border:none;border-radius:6px;
+  padding:8px 16px;font-size:14px;font-family:'Heebo',sans-serif;
+  cursor:pointer;font-weight:700;white-space:nowrap;
+}
+
 /* ── PRINT ── */
 @page{size:A4 portrait;margin:0;}
 @media print{
   body{padding:0!important;margin:0!important;background:white!important;}
-  #toolbar,#install-banner,#toasts,.modal-bg,
+  #toolbar,#menu-panel,#install-banner,#toasts,.modal-bg,
   #lightbox,#loading,.zoom-btn,.clr-btn{display:none!important;}
   .page-wrapper{display:block!important;}
   .a4{
@@ -256,7 +317,8 @@ body{
     overflow:hidden!important;transform:none!important;
   }
   .editable{background:transparent!important;border:none!important;box-shadow:none!important;}
-  .imgblock{resize:none!important;overflow:hidden!important;}
+  .imgblock{resize:none!important;overflow:hidden!important;border:none!important;}
+  .unit-logo{border:none!important;}
 }
 </style>
 </head>
@@ -271,7 +333,9 @@ body{
 <!-- LIGHTBOX -->
 <div id="lightbox" onclick="lbClose()">
   <div id="lb-x" onclick="lbClose()">✕</div>
-  <img id="lb-img" onclick="event.stopPropagation()" alt="">
+  <div id="lb-inner" onclick="event.stopPropagation()">
+    <img id="lb-img" alt="">
+  </div>
 </div>
 
 <!-- TOASTS -->
@@ -316,6 +380,35 @@ body{
   <button onclick="document.getElementById('install-banner').classList.remove('show')">הבנתי</button>
 </div>
 
+<!-- THREE-DOTS DROPDOWN PANEL -->
+<div id="menu-panel">
+  <div id="menu-backdrop" onclick="menuClose()"></div>
+  <div id="menu-list">
+    <!-- [5] font size -->
+    <div class="menu-font-row">
+      <span>גודל מלל</span>
+      <div class="font-btns">
+        <button class="font-btn" onclick="fontSize(-1)">A−</button>
+        <button class="font-btn" onclick="fontSize(+1)">A+</button>
+      </div>
+    </div>
+    <div class="menu-sep"></div>
+    <!-- edit -->
+    <button class="menu-item" id="mi-edit" onclick="menuToggleEdit()">✏️ ערוך נתונים</button>
+    <!-- [3] export only in edit mode -->
+    <label class="menu-item" id="mi-import">
+      📂 טען גיבוי
+      <input type="file" id="inp-imp" accept=".json" class="finp" onchange="doImport(event)">
+    </label>
+    <button class="menu-item" id="mi-export" onclick="menuExport()">💾 שמור גיבוי</button>
+    <div class="menu-sep"></div>
+    <button class="menu-item" id="mi-move" style="display:none" onclick="menuOpenMove()">🔀 העבר מחוז</button>
+    <button class="menu-item danger" id="mi-del" style="display:none" onclick="menuDelete()">🗑️ מחק דפית</button>
+    <div class="menu-sep"></div>
+    <button class="menu-item" onclick="menuPrint()">🖨️ שמור כ-PDF</button>
+  </div>
+</div>
+
 <!-- TOOLBAR -->
 <div id="toolbar">
   <div class="tbg">
@@ -329,18 +422,8 @@ body{
       <option value="south">מחוז דרום</option>
     </select>
     <select id="sel-p" onchange="onPageChange(this)"></select>
-    <button class="btn btn-pdf" onclick="doPrint()">🖨️ PDF</button>
   </div>
-  <div class="tbg">
-    <button class="btn btn-edit"   id="btn-edit"  onclick="toggleEdit()">✏️ ערוך</button>
-    <label  class="btn btn-import">
-      📂 טען גיבוי
-      <input type="file" id="inp-imp" accept=".json" class="finp" onchange="doImport(event)">
-    </label>
-    <button class="btn btn-save"               onclick="doExport()">💾 שמור גיבוי</button>
-    <button class="btn btn-move" id="btn-move" style="display:none" onclick="openMoveModal()">🔀 העבר</button>
-    <button class="btn btn-del"  id="btn-del"  style="display:none" onclick="doDelete()">🗑️ מחק</button>
-  </div>
+  <button id="menu-btn" onclick="menuToggle()">⋯</button>
 </div>
 
 <!-- A4 PAGE -->
@@ -349,7 +432,7 @@ body{
   <div class="pg-header">
     <div class="pg-title editable" id="f-title" contenteditable="false"></div>
     <div class="unit-logo" id="c-logo" data-img="" onclick="trigImg('inp-logo')">
-      <span>סמל<br>יחידה</span>
+      <span id="logo-lbl">סמל<br>יחידה</span>
       <input type="file" id="inp-logo" accept="image/*" class="finp" onchange="onImg(event,'c-logo')">
     </div>
   </div>
@@ -401,22 +484,17 @@ body{
 <script>
 'use strict';
 
-/* ══════════════════════════════════════════
-   SERVICE WORKER REGISTRATION
-══════════════════════════════════════════ */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(e => console.log('SW:', e));
   });
 }
 
-/* ══════════════════════════════════════════
-   CONSTANTS
-══════════════════════════════════════════ */
-const DB_NAME    = 'MashDB_v1';
-const DB_VER     = 1;
-const STORE      = 'pages';
-const DNAMES     = {
+/* ── CONSTANTS ── */
+const DB_NAME = 'MashDB_v1';
+const DB_VER  = 1;
+const STORE   = 'pages';
+const DNAMES  = {
   tel_aviv:'תל אביב', shai:'ש"י', north:'צפון',
   center:'מרכז', jerusalem:'ירושלים', coast:'חוף', south:'דרום'
 };
@@ -424,364 +502,309 @@ const TXT  = ['f-title','f-date','f-desc','f-district','f-height',
               'f-coords','f-dirs','f-obs','f-notes','f-phones'];
 const IMGS = ['c-img1','c-img2','c-img3','c-logo'];
 
-/* ══════════════════════════════════════════
-   STATE
-══════════════════════════════════════════ */
-let db        = null;
-let curDist   = 'jerusalem';
-let curId     = null;
-let editing   = false;
+/* ── STATE ── */
+let idb      = null;
+let curDist  = 'jerusalem';
+let curId    = null;
+let editing  = false;
+let fontScale = 1.0;  // [5]
 
-/* ══════════════════════════════════════════
-   INDEXEDDB HELPERS
-   Each helper opens its own fresh transaction.
-   This is the correct pattern for Safari/iOS.
-══════════════════════════════════════════ */
-function idbGet(key) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(STORE, 'readonly');
-    const req = tx.objectStore(STORE).get(key);
-    req.onsuccess = () => res(req.result);
-    req.onerror   = () => rej(req.error);
-  });
-}
+/* ── IDB HELPERS ── */
+const idbGet = k => new Promise((res,rej) => {
+  const r = idb.transaction(STORE,'readonly').objectStore(STORE).get(k);
+  r.onsuccess = () => res(r.result);
+  r.onerror   = () => rej(r.error);
+});
+const idbPut = (k,v) => new Promise((res,rej) => {
+  const tx = idb.transaction(STORE,'readwrite');
+  tx.objectStore(STORE).put(v,k);
+  tx.oncomplete = () => res();
+  tx.onerror    = () => rej(tx.error);
+});
+const idbDel = k => new Promise((res,rej) => {
+  const tx = idb.transaction(STORE,'readwrite');
+  tx.objectStore(STORE).delete(k);
+  tx.oncomplete = () => res();
+  tx.onerror    = () => rej(tx.error);
+});
+const idbAll = () => new Promise((res,rej) => {
+  const tx=idb.transaction(STORE,'readonly');
+  const out={};
+  tx.objectStore(STORE).openCursor().onsuccess = e => {
+    const c=e.target.result;
+    if(c){out[c.key]=c.value;c.continue();}else res(out);
+  };
+  tx.onerror=()=>rej(tx.error);
+});
+const idbClear = () => new Promise((res,rej) => {
+  const tx=idb.transaction(STORE,'readwrite');
+  tx.objectStore(STORE).clear();
+  tx.oncomplete=()=>res(); tx.onerror=()=>rej(tx.error);
+});
+const openDB = () => new Promise((res,rej) => {
+  const r=indexedDB.open(DB_NAME,DB_VER);
+  r.onupgradeneeded=e=>{
+    const d=e.target.result;
+    if(!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE);
+  };
+  r.onsuccess=e=>res(e.target.result);
+  r.onerror=e=>rej(e.target.error);
+  r.onblocked=()=>rej(new Error('DB blocked'));
+});
 
-function idbPut(key, val) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(STORE, 'readwrite');
-    tx.objectStore(STORE).put(val, key);
-    tx.oncomplete = () => res();
-    tx.onerror    = () => rej(tx.error);
-  });
-}
-
-function idbDelete(key) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(STORE, 'readwrite');
-    tx.objectStore(STORE).delete(key);
-    tx.oncomplete = () => res();
-    tx.onerror    = () => rej(tx.error);
-  });
-}
-
-function idbGetAll() {
-  return new Promise((res, rej) => {
-    const tx      = db.transaction(STORE, 'readonly');
-    const store   = tx.objectStore(STORE);
-    const result  = {};
-    store.openCursor().onsuccess = e => {
-      const cur = e.target.result;
-      if (cur) { result[cur.key] = cur.value; cur.continue(); }
-      else res(result);
-    };
-    tx.onerror = () => rej(tx.error);
-  });
-}
-
-function idbClear() {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(STORE, 'readwrite');
-    tx.objectStore(STORE).clear();
-    tx.oncomplete = () => res();
-    tx.onerror    = () => rej(tx.error);
-  });
-}
-
-/* ══════════════════════════════════════════
-   OPEN DB
-══════════════════════════════════════════ */
-function openDB() {
-  return new Promise((res, rej) => {
-    const req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = e => {
-      const d = e.target.result;
-      if (!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE);
-    };
-    req.onsuccess = e => res(e.target.result);
-    req.onerror   = e => rej(e.target.error);
-    req.onblocked = () => rej(new Error('DB blocked'));
-  });
-}
-
-/* ══════════════════════════════════════════
-   SEED DATA
-══════════════════════════════════════════ */
-function mkPage(title,date,desc,dHeb,height,coords,dirs,obs,notes,phones,dist) {
-  return {
-    district:dist,
+/* ── SEED ── */
+function mkP(title,date,desc,dHeb,height,coords,dirs,obs,notes,phones,dist){
+  return {district:dist,
     texts:{'f-title':title,'f-date':date,'f-desc':desc,'f-district':dHeb,
            'f-height':height,'f-coords':coords,'f-dirs':dirs,
            'f-obs':obs,'f-notes':notes,'f-phones':phones},
-    images:{}, imageHeights:{}
-  };
+    images:{},imageHeights:{}};
 }
-
-async function seedDB() {
-  const pages = [
-    ['page_100', mkPage('הדסה הר הצופים','09.20','מנחת אספלט צפונית לביה"ח','ירושלים','2650',
+async function seedDB(){
+  const rows=[
+    ['page_100',mkP('הדסה הר הצופים','09.20','מנחת אספלט צפונית לביה"ח','ירושלים','2650',
       'WGS 35.240427, 31.799998<br>ITM 222865, 634143<br>UTM36n 712103, 3520453','240',
       'עצים 10 מ\' ממערב<br>עצים 15 מ\' בכיוון 120<br>בניין ביה"ח 300 מ\' מדרום','',
       '050-4737579 :קב"ט יוני<br>050-7874123 :מוקד נייד תורן','jerusalem')],
-    ['page_101', mkPage('מנחת נחל דרגה','','אבק קל, אבנים קטנות','ירושלים',
+    ['page_101',mkP('מנחת נחל דרגה','','אבק קל, אבנים קטנות','ירושלים',
       '-800\'','שכבת LL','פיינל מערבה בלבד | כיוון נגיעה 300','',
       'השתנות משטח לאחר שיטפון | המראה מזרחה עדיפה','','jerusalem')],
-    ['page_201', mkPage('עין שמר','09.20','מנחת מסוקים בתחום שדה התעופה לשעבר','חוף','',
+    ['page_201',mkP('עין שמר','09.20','מנחת מסוקים בתחום שדה התעופה לשעבר','חוף','',
       'WGS35.013024, 32.436818<br>ITM201456, 704776','','',
       'ניתן לנחות רק למסוק צהלי וכיבוי אש.','עידן 052-5104462','coast')],
-    ['page_202', mkPage('מנחת פל-ים קיסריה','09.20','מנחת אספלט שמשמש את רוה"מ','חוף','40',
-      'WGS34.930957, 32.482835<br>ITM193751, 709896','כל הכיוונים','','תיאומים מול מנהל הביטחון',
-      'מוקד בטחון קיסריה 0542200514','coast')],
-    ['page_203', mkPage('רגבים','04.22','','חוף','140',
+    ['page_202',mkP('מנחת פל-ים קיסריה','09.20','מנחת אספלט שמשמש את רוה"מ','חוף','40',
+      'WGS34.930957, 32.482835<br>ITM193751, 709896','כל הכיוונים','',
+      'תיאומים מול מנהל הביטחון','מוקד בטחון קיסריה 0542200514','coast')],
+    ['page_203',mkP('רגבים','04.22','','חוף','140',
       'WGS35.051392, 32.525478<br>ITM205078, 714602','',
       'אנטנה על הכביש (מסומנת)<br>קו חוטים 400 מ\' מדרום','',
       'בא"ח גולני מטכלי 046125212','coast')],
-    ['page_204', mkPage('בית חולים נהריה','04.22','','חוף','30',
+    ['page_204',mkP('בית חולים נהריה','04.22','','חוף','30',
       'WGS35.116064, 33.010648<br>ITM211199, 768401','',
       'מצפון מסתיימת מערכת חוטי חשמל','','04-9107525<br>050-7887570','coast')],
-    ['page_205', mkPage('אנדרטת מג"ב','','מנחת מחוץ לשטח אנדרטת מג"ב','חוף','',
+    ['page_205',mkP('אנדרטת מג"ב','','מנחת מחוץ לשטח אנדרטת מג"ב','חוף','',
       'WGS 35.002575, 32.466022<br>ITM 200617, 710008','','',
       'המנחת באחריות בסיס מג"ב. בטיחות: מסוקים של ברק.','054-2538583','coast')],
   ];
-  for (const [k,v] of pages) await idbPut(k, v);
+  for(const[k,v]of rows) await idbPut(k,v);
 }
 
-/* ══════════════════════════════════════════
-   PAGE LIST — single innerHTML write (iOS fix)
-══════════════════════════════════════════ */
-async function buildList(dist, activateId) {
-  const all = await idbGetAll();
+/* ── PAGE LIST ── */
+async function buildList(dist, activateId){
+  const all = await idbAll();
   const entries = Object.entries(all)
-    .filter(([,v]) => v.district === dist)
-    .map(([id,v]) => ({
-      id,
-      lbl: (v.texts['f-title']||'').replace(/<[^>]*>/g,'').trim() || 'מנחת ללא שם'
-    }))
-    .sort((a,b) => a.lbl.localeCompare(b.lbl,'he'));
+    .filter(([,v])=>v.district===dist)
+    .map(([id,v])=>({id,lbl:(v.texts['f-title']||'').replace(/<[^>]*>/g,'').trim()||'מנחת ללא שם'}))
+    .sort((a,b)=>a.lbl.localeCompare(b.lbl,'he'));
 
-  let html = entries.map(e =>
-    `<option value="${e.id}">${e.lbl.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</option>`
-  ).join('');
+  let html = entries.map(e=>`<option value="${e.id}">${esc(e.lbl)}</option>`).join('');
+  if(editing) html += '<option value="ADD_NEW">➕ הוסף מנחת חדש...</option>';
 
-  if (editing) html += '<option value="ADD_NEW">➕ הוסף מנחת חדש...</option>';
-
-  // single write — iOS critical
-  document.getElementById('sel-p').innerHTML = html;
+  document.getElementById('sel-p').innerHTML = html; // single write
 
   const sel = document.getElementById('sel-p');
-  if (activateId && sel.querySelector(`option[value="${activateId}"]`)) {
-    sel.value = activateId;
-    curId = activateId;
-  } else if (entries.length > 0) {
-    sel.value = entries[0].id;
-    curId = entries[0].id;
-  } else if (editing) {
-    await createPage(dist);
-    return;
+  if(activateId && sel.querySelector(`option[value="${activateId}"]`)){
+    sel.value=activateId; curId=activateId;
+  } else if(entries.length>0){
+    sel.value=entries[0].id; curId=entries[0].id;
+  } else if(editing){
+    await createPage(dist); return;
   } else {
     blankPage('אין דפיות במחוז זה');
-    setTimeout(adjustScale, 60);
-    return;
+    setTimeout(adjustScale,60); return;
   }
   await loadPage(curId);
-  setTimeout(adjustScale, 60);
+  setTimeout(adjustScale,60);
 }
 
-/* ══════════════════════════════════════════
-   LOAD / SAVE
-══════════════════════════════════════════ */
-async function loadPage(id) {
+/* ── LOAD / SAVE ── */
+async function loadPage(id){
   const p = await idbGet(id);
-  if (!p) { blankPage('דפית לא נמצאה'); return; }
-
-  TXT.forEach(fid => {
-    const el = document.getElementById(fid);
-    if (el) el.innerHTML = (p.texts?.[fid] ?? '');
+  if(!p){blankPage('דפית לא נמצאה');return;}
+  TXT.forEach(fid=>{
+    const el=document.getElementById(fid);
+    if(el) el.innerHTML=(p.texts?.[fid]??'');
   });
-  IMGS.forEach(cid => {
-    const el  = document.getElementById(cid);
-    if (!el) return;
-    const b64 = p.images?.[cid] || '';
-    applyImg(el, b64);
-    el.style.height = p.imageHeights?.[cid] || '';
+  IMGS.forEach(cid=>{
+    const el=document.getElementById(cid);
+    if(!el)return;
+    applyImg(el, p.images?.[cid]||'');
+    el.style.height = p.imageHeights?.[cid]||'';
   });
   setEditable(editing);
 }
 
-async function savePage() {
-  if (!curId) return;
-  const p = { district: curDist, texts:{}, images:{}, imageHeights:{} };
-  TXT.forEach(fid => {
-    const el = document.getElementById(fid);
-    if (el) p.texts[fid] = el.innerHTML;
+async function savePage(){
+  if(!curId)return;
+  const p={district:curDist,texts:{},images:{},imageHeights:{}};
+  TXT.forEach(fid=>{const el=document.getElementById(fid);if(el)p.texts[fid]=el.innerHTML;});
+  IMGS.forEach(cid=>{
+    const el=document.getElementById(cid);if(!el)return;
+    p.images[cid]=el.getAttribute('data-img')||'';
+    const h=el.style.height; if(h)p.imageHeights[cid]=h;
   });
-  IMGS.forEach(cid => {
-    const el = document.getElementById(cid);
-    if (!el) return;
-    p.images[cid] = el.getAttribute('data-img') || '';
-    const h = el.style.height;
-    if (h) p.imageHeights[cid] = h;
-  });
-  await idbPut(curId, p);
+  await idbPut(curId,p);
 }
 
-function blankPage(msg='') {
-  TXT.forEach(fid => { const el=document.getElementById(fid); if(el) el.innerHTML=''; });
-  IMGS.forEach(cid => applyImg(document.getElementById(cid),''));
-  const t = document.getElementById('f-title');
-  if (t) t.innerHTML = msg;
+function blankPage(msg=''){
+  TXT.forEach(fid=>{const el=document.getElementById(fid);if(el)el.innerHTML='';});
+  IMGS.forEach(cid=>applyImg(document.getElementById(cid),''));
+  const t=document.getElementById('f-title');if(t)t.innerHTML=msg;
 }
 
-async function createPage(dist) {
-  const id = 'page_' + Date.now();
-  await idbPut(id, {
-    district:dist,
+async function createPage(dist){
+  const id='page_'+Date.now();
+  await idbPut(id,{district:dist,
     texts:{'f-title':'מנחת חדש','f-district':DNAMES[dist]||''},
-    images:{}, imageHeights:{}
-  });
-  curId = id;
-  await buildList(dist, id);
+    images:{},imageHeights:{}});
+  curId=id;
+  await buildList(dist,id);
   toast('נוצרה דפית חדשה — ערוך ושמור','inf',3000);
 }
 
-/* ══════════════════════════════════════════
-   SELECTORS
-══════════════════════════════════════════ */
-async function onDistrictChange(el) {
+/* ── SELECTORS ── */
+async function onDistrictChange(el){
   el.blur();
-  if (editing) await savePage();
-  curDist = el.value;
-  await buildList(curDist, null);
+  if(editing) await savePage();
+  curDist=el.value;
+  await buildList(curDist,null);
+}
+async function onPageChange(el){
+  const val=el.value; el.blur();
+  if(editing) await savePage();
+  if(val==='ADD_NEW'){await createPage(curDist);}
+  else{curId=val; await loadPage(curId);}
 }
 
-async function onPageChange(el) {
-  const val = el.value;
-  el.blur();
-  if (editing) await savePage();
-  if (val === 'ADD_NEW') {
-    await createPage(curDist);
-  } else {
-    curId = val;
-    await loadPage(curId);
-  }
+/* ── EDIT MODE ── */
+function setEditable(on){
+  document.querySelectorAll('.editable').forEach(el=>el.contentEditable=on?'true':'false');
 }
-
-/* ══════════════════════════════════════════
-   EDIT MODE
-══════════════════════════════════════════ */
-function setEditable(on) {
-  document.querySelectorAll('.editable').forEach(el => {
-    el.contentEditable = on ? 'true' : 'false';
-  });
-}
-
-function enterEdit() {
-  editing = true;
+function enterEdit(){
+  editing=true;
   document.getElementById('body').classList.add('is-editing');
-  document.getElementById('btn-edit').innerHTML  = '✅ סיום ושמירה';
-  document.getElementById('btn-del').style.display  = 'block';
-  document.getElementById('btn-move').style.display = 'block';
+  document.getElementById('mi-edit').innerHTML='✅ סיום ושמירה';
+  document.getElementById('mi-edit').classList.add('edit-active');
+  document.getElementById('mi-del').style.display='flex';
+  document.getElementById('mi-move').style.display='flex';
+  document.getElementById('mi-export').style.display='flex';
   setEditable(true);
-  const sel = document.getElementById('sel-p');
-  if (!sel.querySelector('option[value="ADD_NEW"]')) {
-    const o = document.createElement('option');
-    o.value='ADD_NEW'; o.textContent='➕ הוסף מנחת חדש...';
-    sel.appendChild(o);
+  const sel=document.getElementById('sel-p');
+  if(!sel.querySelector('option[value="ADD_NEW"]')){
+    const o=document.createElement('option');
+    o.value='ADD_NEW';o.textContent='➕ הוסף מנחת חדש...';sel.appendChild(o);
   }
 }
-
-function exitEdit() {
-  editing = false;
+function exitEdit(){
+  editing=false;
   document.getElementById('body').classList.remove('is-editing');
-  document.getElementById('btn-edit').innerHTML  = '✏️ ערוך';
-  document.getElementById('btn-del').style.display  = 'none';
-  document.getElementById('btn-move').style.display = 'none';
+  document.getElementById('mi-edit').innerHTML='✏️ ערוך נתונים';
+  document.getElementById('mi-edit').classList.remove('edit-active');
+  document.getElementById('mi-del').style.display='none';
+  document.getElementById('mi-move').style.display='none';
+  document.getElementById('mi-export').style.display='none';
   setEditable(false);
-  const o = document.getElementById('sel-p').querySelector('option[value="ADD_NEW"]');
-  if (o) o.remove();
+  const o=document.getElementById('sel-p').querySelector('option[value="ADD_NEW"]');
+  if(o)o.remove();
 }
-
-async function toggleEdit() {
-  if (!editing) {
-    const pw = prompt('סיסמת מערכת:');
-    if (pw === null) return;
-    if (pw !== '124') { toast('סיסמה שגויה','err'); return; }
+async function toggleEdit(){
+  if(!editing){
+    const pw=prompt('סיסמת מערכת:');
+    if(pw===null)return;
+    if(pw!=='124'){toast('סיסמה שגויה','err');return;}
     enterEdit();
   } else {
-    await savePage();
-    exitEdit();
-    await buildList(curDist, curId);
+    await savePage(); exitEdit();
+    await buildList(curDist,curId);
     toast('נשמר בהצלחה ✓','ok',2000);
   }
 }
 
-/* ══════════════════════════════════════════
-   DELETE
-══════════════════════════════════════════ */
-function doDelete() {
-  confirm2('⚠️ מחיקת דפית','למחוק דפית זו לצמיתות?', async () => {
-    await idbDelete(curId);
-    curId = null;
-    exitEdit();
-    await buildList(curDist, null);
-    toast('הדפית נמחקה','ok');
-  });
+/* ── MENU ── */
+function menuToggle(){
+  const p=document.getElementById('menu-panel');
+  p.classList.contains('open')?menuClose():p.classList.add('open');
+}
+function menuClose(){document.getElementById('menu-panel').classList.remove('open');}
+async function menuToggleEdit(){menuClose();await toggleEdit();}
+async function menuExport(){menuClose();await doExport();}
+function menuOpenMove(){menuClose();openMoveModal();}
+function menuDelete(){menuClose();doDelete();}
+function menuPrint(){menuClose();doPrint();}
+
+/* ── [5] FONT SIZE ── */
+function fontSize(delta){
+  fontScale = Math.min(1.6, Math.max(0.7, fontScale + delta*0.1));
+  applyFontScale();
+  try{ localStorage.setItem('mash_font', fontScale.toString()); }catch(e){}
+}
+function applyFontScale(){
+  const a4 = document.getElementById('a4');
+  // scale all text via font-size on the a4 container
+  a4.style.fontSize = (13.5 * fontScale) + 'px';
+  // title scales separately
+  document.getElementById('f-title').closest('.pg-title').style.fontSize = (25*fontScale)+'px';
+  // h3 headers
+  a4.querySelectorAll('h3').forEach(h=>h.style.fontSize=(14.5*fontScale)+'px');
+}
+function loadFontScale(){
+  try{
+    const s=localStorage.getItem('mash_font');
+    if(s){ fontScale=parseFloat(s)||1.0; applyFontScale(); }
+  }catch(e){}
 }
 
-/* ══════════════════════════════════════════
-   MOVE DISTRICT
-══════════════════════════════════════════ */
-function openMoveModal() {
-  if (!curId) return;
-  const name = (document.getElementById('f-title').innerText||'').replace(/\n/g,'').trim();
-  document.getElementById('mm-n').textContent = name;
-  document.getElementById('mm-sel').value = curDist;
+/* ── DELETE / MOVE ── */
+function doDelete(){
+  confirm2('⚠️ מחיקת דפית','למחוק דפית זו לצמיתות?',async()=>{
+    await idbDel(curId); curId=null; exitEdit();
+    await buildList(curDist,null); toast('הדפית נמחקה','ok');
+  });
+}
+function openMoveModal(){
+  if(!curId)return;
+  document.getElementById('mm-n').textContent=
+    (document.getElementById('f-title').innerText||'').replace(/\n/g,'').trim();
+  document.getElementById('mm-sel').value=curDist;
   mOpen('m-move');
 }
-async function moveConfirm() {
-  const target = document.getElementById('mm-sel').value;
+async function moveConfirm(){
+  const target=document.getElementById('mm-sel').value;
   mClose('m-move');
-  if (target === curDist) { toast('המנחת כבר במחוז זה','inf'); return; }
+  if(target===curDist){toast('המנחת כבר במחוז זה','inf');return;}
   await savePage();
-  const p = await idbGet(curId);
-  p.district = target;
-  p.texts['f-district'] = DNAMES[target]||'';
-  await idbPut(curId, p);
-  document.getElementById('f-district').innerHTML = DNAMES[target]||'';
-  curDist = target;
-  document.getElementById('sel-d').value = target;
-  await buildList(curDist, curId);
+  const p=await idbGet(curId);
+  p.district=target; p.texts['f-district']=DNAMES[target]||'';
+  await idbPut(curId,p);
+  document.getElementById('f-district').innerHTML=DNAMES[target]||'';
+  curDist=target;
+  document.getElementById('sel-d').value=target;
+  await buildList(curDist,curId);
   toast('הועבר ל'+DNAMES[target]+' ✓','ok');
 }
 
-/* ══════════════════════════════════════════
-   IMAGES
-══════════════════════════════════════════ */
-function trigImg(inputId) {
-  if (!editing) return;
-  document.getElementById(inputId).click();
+/* ── IMAGES ── */
+function trigImg(id){if(!editing)return;document.getElementById(id).click();}
+function applyImg(el,b64){
+  if(!el)return;
+  el.setAttribute('data-img',b64||'');
+  if(b64){el.style.backgroundImage=`url('${b64}')`;el.classList.add('has-img');}
+  else{el.style.backgroundImage='';el.classList.remove('has-img');}
 }
-function applyImg(el, b64) {
-  if (!el) return;
-  el.setAttribute('data-img', b64||'');
-  if (b64) { el.style.backgroundImage=`url('${b64}')`;el.classList.add('has-img'); }
-  else      { el.style.backgroundImage='';el.classList.remove('has-img'); }
-}
-function onImg(event, cid) {
-  const file = event.target.files[0];
-  if (!file) return;
-  event.target.value = '';
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX=900; let w=img.width,h=img.height;
+function onImg(event,cid){
+  const file=event.target.files[0]; if(!file)return;
+  event.target.value='';
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=900;let w=img.width,h=img.height;
       if(w>h){if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}}
-      else   {if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
+      else{if(h>MAX){w=Math.round(w*MAX/h);h=MAX;}}
       const cv=document.createElement('canvas');
       cv.width=w;cv.height=h;
       cv.getContext('2d').drawImage(img,0,0,w,h);
-      const b64=cv.toDataURL('image/jpeg',0.65);
-      applyImg(document.getElementById(cid), b64);
+      applyImg(document.getElementById(cid),cv.toDataURL('image/jpeg',0.65));
       savePage().then(()=>toast('תמונה נשמרה ✓','ok',2000));
     };
     img.onerror=()=>toast('שגיאה בתמונה','err');
@@ -790,21 +813,21 @@ function onImg(event, cid) {
   reader.onerror=()=>toast('שגיאה בקריאת קובץ','err');
   reader.readAsDataURL(file);
 }
-function clrImg(event, cid) {
-  event.stopPropagation();
-  if (!editing) return;
+function clrImg(e,cid){
+  e.stopPropagation();if(!editing)return;
   applyImg(document.getElementById(cid),'');
   savePage().then(()=>toast('תמונה הוסרה','inf',2000));
 }
 
-/* ══════════════════════════════════════════
-   LIGHTBOX
-══════════════════════════════════════════ */
+/* ── LIGHTBOX with pinch-zoom ── */
 function lbOpen(e,cid){
   e.stopPropagation();
   const b64=document.getElementById(cid).getAttribute('data-img');
   if(!b64)return;
-  document.getElementById('lb-img').src=b64;
+  const img=document.getElementById('lb-img');
+  img.src=b64;
+  img.style.transform='scale(1)';
+  lbScale=1; lbLastDist=0;
   document.getElementById('lightbox').style.display='flex';
 }
 function lbClose(){
@@ -813,88 +836,82 @@ function lbClose(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')lbClose();});
 
-/* ══════════════════════════════════════════
-   EXPORT / IMPORT JSON
-══════════════════════════════════════════ */
-async function doExport() {
-  if (editing) await savePage();
-  const all  = await idbGetAll();
-  const json = JSON.stringify({pages:all},null,2);
-  const blob = new Blob([json],{type:'application/octet-stream'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href=url; a.download=`gibus_minhatim_${today()}.json`;
+/* pinch-zoom for lightbox */
+let lbScale=1, lbLastDist=0;
+document.getElementById('lb-inner').addEventListener('touchstart',e=>{
+  if(e.touches.length===2) lbLastDist=Math.hypot(
+    e.touches[0].clientX-e.touches[1].clientX,
+    e.touches[0].clientY-e.touches[1].clientY);
+},{passive:true});
+document.getElementById('lb-inner').addEventListener('touchmove',e=>{
+  if(e.touches.length===2){
+    const d=Math.hypot(
+      e.touches[0].clientX-e.touches[1].clientX,
+      e.touches[0].clientY-e.touches[1].clientY);
+    if(lbLastDist>0){
+      lbScale=Math.min(5,Math.max(0.5,lbScale*(d/lbLastDist)));
+      document.getElementById('lb-img').style.transform=`scale(${lbScale})`;
+    }
+    lbLastDist=d;
+    e.preventDefault();
+  }
+},{passive:false});
+
+/* ── EXPORT / IMPORT ── */
+async function doExport(){
+  if(editing) await savePage();
+  const all=await idbAll();
+  const json=JSON.stringify({pages:all},null,2);
+  const blob=new Blob([json],{type:'application/octet-stream'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`gibus_minhatim_${today()}.json`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   URL.revokeObjectURL(url);
   toast('גיבוי יוצא ✓','ok');
 }
-
-function doImport(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+function doImport(event){
+  const file=event.target.files[0];if(!file)return;
   event.target.value='';
-  confirm2('📂 טעינת גיבוי','הנתונים הקיימים יוחלפו. להמשיך?', async () => {
-    try {
-      const text = await file.text();
-      const imp  = JSON.parse(text);
-
-      // support both formats: {pages:{}} or flat {page_xxx:{}}
-      const pages = imp.pages || imp;
-
-      // remap old field names from previous IndexedDB versions
-      const TMAP = {
-        'field-title':'f-title','field-date':'f-date','field-desc':'f-desc',
-        'field-district':'f-district','field-height':'f-height',
-        'field-coords':'f-coords','field-directions':'f-dirs',
-        'field-obstacles':'f-obs','field-notes':'f-notes','field-phones':'f-phones'
-      };
-      const IMAP = {
-        'img-container-1':'c-img1','img-container-2':'c-img2',
-        'img-container-3':'c-img3','logo-container':'c-logo'
-      };
-
+  confirm2('📂 טעינת גיבוי','הנתונים הקיימים יוחלפו. להמשיך?',async()=>{
+    try{
+      const text=await file.text();
+      const imp=JSON.parse(text);
+      const pages=imp.pages||imp;
+      const TMAP={'field-title':'f-title','field-date':'f-date','field-desc':'f-desc',
+        'field-district':'f-district','field-height':'f-height','field-coords':'f-coords',
+        'field-directions':'f-dirs','field-obstacles':'f-obs','field-notes':'f-notes','field-phones':'f-phones'};
+      const IMAP={'img-container-1':'c-img1','img-container-2':'c-img2',
+        'img-container-3':'c-img3','logo-container':'c-logo'};
       await idbClear();
-      for (const [k,item] of Object.entries(pages)) {
-        if (!item.district) item.district='jerusalem';
-        if (!item.images)   item.images={};
-        if (!item.imageHeights) item.imageHeights={};
-        if (item.texts) {
-          const nt={};
-          for (const [ok,ov] of Object.entries(item.texts)) nt[TMAP[ok]||ok]=ov;
-          item.texts=nt;
-        }
-        const ni={};
-        for (const [ok,ov] of Object.entries(item.images)) ni[IMAP[ok]||ok]=ov;
-        item.images=ni;
-        await idbPut(k, item);
+      for(const[k,item]of Object.entries(pages)){
+        if(!item.district)item.district='jerusalem';
+        if(!item.images)item.images={};
+        if(!item.imageHeights)item.imageHeights={};
+        if(item.texts){const nt={};for(const[ok,ov]of Object.entries(item.texts))nt[TMAP[ok]||ok]=ov;item.texts=nt;}
+        const ni={};for(const[ok,ov]of Object.entries(item.images))ni[IMAP[ok]||ok]=ov;item.images=ni;
+        await idbPut(k,item);
       }
-      if (editing) exitEdit();
-      await buildList(curDist, null);
+      if(editing)exitEdit();
+      await buildList(curDist,null);
       toast('גיבוי נטען בהצלחה ✓','ok',3000);
-    } catch(err) {
-      console.error(err);
-      toast('קובץ לא תקין','err');
-    }
+    }catch(err){console.error(err);toast('קובץ לא תקין','err');}
   });
 }
 
-/* ══════════════════════════════════════════
-   PRINT
-══════════════════════════════════════════ */
-function doPrint() {
-  if (editing){ toast('סיים עריכה לפני הדפסה','err'); return; }
+/* ── PRINT ── */
+function doPrint(){
+  if(editing){toast('סיים עריכה לפני הדפסה','err');return;}
   const orig=document.title;
   document.title=(document.getElementById('f-title').innerText||'minhat').replace(/\n/g,'').trim();
   window.print();
   setTimeout(()=>{document.title=orig;},200);
 }
 
-/* ══════════════════════════════════════════
-   SCALE
-══════════════════════════════════════════ */
-const a4El = document.getElementById('a4');
-const tbEl = document.getElementById('toolbar');
-function adjustScale() {
+/* ── SCALE ── */
+const a4El=document.getElementById('a4');
+const tbEl=document.getElementById('toolbar');
+function adjustScale(){
   const ph=tbEl.offsetHeight;
   document.body.style.paddingTop=(ph+20)+'px';
   a4El.style.transform='none';
@@ -910,9 +927,7 @@ function adjustScale() {
 window.addEventListener('resize',adjustScale);
 window.addEventListener('orientationchange',()=>setTimeout(adjustScale,250));
 
-/* ══════════════════════════════════════════
-   MODALS & TOAST
-══════════════════════════════════════════ */
+/* ── MODALS / TOAST / UTILS ── */
 function mOpen(id){document.getElementById(id).classList.add('open');}
 function mClose(id){document.getElementById(id).classList.remove('open');}
 function confirm2(title,msg,onYes){
@@ -930,50 +945,47 @@ function toast(msg,type='inf',dur=3000){
   setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},dur);
 }
 function today(){return new Date().toISOString().slice(0,10);}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-/* ══════════════════════════════════════════
-   INSTALL BANNER — show if not installed as PWA
-══════════════════════════════════════════ */
-function showInstallHint() {
-  const isStandalone = window.navigator.standalone === true ||
-                       window.matchMedia('(display-mode: standalone)').matches;
-  if (!isStandalone) {
-    setTimeout(()=>{
-      document.getElementById('install-banner').classList.add('show');
-    }, 3000);
-  }
+function showInstallHint(){
+  const ok=window.navigator.standalone===true||
+           window.matchMedia('(display-mode: standalone)').matches;
+  if(!ok) setTimeout(()=>document.getElementById('install-banner').classList.add('show'),3000);
 }
 
-/* ══════════════════════════════════════════
-   INIT
-══════════════════════════════════════════ */
-async function init() {
-  try {
-    document.getElementById('loading-txt').textContent = 'מתחבר למסד נתונים...';
-    db = await openDB();
+/* ── [3] hide export when not editing ── */
+function initMenuVisibility(){
+  document.getElementById('mi-export').style.display='none';
+  document.getElementById('mi-del').style.display='none';
+  document.getElementById('mi-move').style.display='none';
+}
 
-    // Check if DB is empty → seed
-    const all = await idbGetAll();
-    if (Object.keys(all).length === 0) {
-      document.getElementById('loading-txt').textContent = 'טוען נתונים ראשוניים...';
+/* ── INIT ── */
+async function init(){
+  try{
+    document.getElementById('loading-txt').textContent='מתחבר למסד נתונים...';
+    idb=await openDB();
+    const all=await idbAll();
+    if(Object.keys(all).length===0){
+      document.getElementById('loading-txt').textContent='טוען נתונים ראשוניים...';
       await seedDB();
     }
-
-    document.getElementById('sel-d').value = 'jerusalem';
-    curDist = 'jerusalem';
-    await buildList(curDist, null);
+    initMenuVisibility();
+    loadFontScale();
+    document.getElementById('sel-d').value='jerusalem';
+    curDist='jerusalem';
+    await buildList(curDist,null);
     adjustScale();
     document.getElementById('loading').classList.add('gone');
     showInstallHint();
-  } catch(e) {
-    console.error('Init error:', e);
-    document.getElementById('loading-txt').textContent =
-      'שגיאה: ' + (e.message || e) +
-      '\n\nוודא שהאתר פתוח ב-Safari (לא מ-Files).';
+  }catch(e){
+    console.error('Init error:',e);
+    document.getElementById('loading-txt').textContent=
+      'שגיאה: '+(e.message||e)+'\n\nוודא שהאתר פתוח ב-Safari (לא מ-Files).';
   }
 }
 
-window.addEventListener('load', init);
+window.addEventListener('load',init);
 </script>
 </body>
 </html>
